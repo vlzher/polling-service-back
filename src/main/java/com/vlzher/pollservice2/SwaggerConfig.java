@@ -26,6 +26,6 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("BasicAuth", "Authorization", "header");
+        return new ApiKey("JWT", "Authorization", "header");
     }
 }

@@ -147,34 +147,6 @@ public class PollController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody RegistrationRequest registrationRequest) {
-        log.info("Received registration request: {}", registrationRequest);
-
-        User newUser = new User();
-        newUser.setLogin(registrationRequest.getLogin());
-        newUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword())); // Hash the password
-        log.info("Creating new user: {}", newUser);
-
-        try {
-            userRepository.save(newUser);
-            log.info("User saved successfully");
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (DuplicateKeyException e) {
-            // Handle duplicate login (username) error
-            log.error("Duplicate login error", e);
-            return new ResponseEntity("Username already exists", HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            // Handle other exceptions
-            log.error("Error registering user", e);
-            return new ResponseEntity("Registration failed", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Login endpoint (handled by Spring Security)
-
-    // Secured endpoint to get all answers by the authenticated user
     @GetMapping("/answers")
     public ResponseEntity<List<AnswerDTO>> getUserAnswers(Principal principal) {
         List<Answer> userAnswers = answerRepository.findByUserLogin(principal.getName());
