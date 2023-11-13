@@ -7,8 +7,10 @@ public class QuestionOptionDTO {
     private Long questionOptionID;
     private String questionOptionName;
 
-    public QuestionOptionDTO(QuestionOption questionOption){
+    private int answerCount;
+    public QuestionOptionDTO(QuestionOption questionOption, int answerCount){
         this.questionOptionID = questionOption.getQuestionOptionID();
         this.questionOptionName = questionOption.getQuestionOptionName();
+        this.answerCount = answerCount;
     }
 }

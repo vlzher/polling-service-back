@@ -4,6 +4,7 @@ package com.vlzher.pollservice2.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,4 +17,6 @@ public class Poll {
     @ManyToOne
     @JoinColumn(name = "user_login")
     private User user;
+    @OneToMany(mappedBy = "poll", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Question> questions;
 }

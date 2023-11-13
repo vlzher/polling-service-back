@@ -5,6 +5,7 @@ import com.vlzher.pollservice2.entity.*;
 import com.vlzher.pollservice2.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -93,11 +94,11 @@ public class PollController {
     public ResponseEntity<Void> removeQuestionFromPoll(@PathVariable Long pollID, @PathVariable Long questionID, Principal principal) {
         Poll poll = pollRepository.findById(pollID).orElseThrow();
         User user = userRepository.findById(principal.getName()).orElseThrow();
-        log.info("Poll user: {}", poll.getUser()); // Log the value of poll.getUser()
-        log.info("Logged in user: {}", user);
-//        if (!poll.getUser().equals(user)) {
-//            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // User is not the author of the poll
-//        }
+//        log.info("Poll user: {}", poll.getUser()); // Log the value of poll.getUser()
+//        log.info("Logged in user: {}", user);
+        if (!poll.getUser().equals(user)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // User is not the author of the poll
+        }
 
         questionRepository.deleteById(questionID);
 
@@ -115,7 +116,10 @@ public class PollController {
                     List<QuestionOptionDTO> questionOptions =
                             questionOptionRepository.findByQuestionQuestionID(question.getQuestionID())
                                     .stream()
-                                    .map(QuestionOptionDTO::new)
+                                    .map(option -> {
+                                        int answerCount = answerRepository.countByQuestionOption(option);
+                                        return new QuestionOptionDTO(option, answerCount);
+                                    })
                                     .collect(Collectors.toList());
                     return new QuestionDetailsDTO(question, questionOptions);
                 })
@@ -157,9 +161,14 @@ public class PollController {
             userRepository.save(newUser);
             log.info("User saved successfully");
             return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (DuplicateKeyException e) {
+            // Handle duplicate login (username) error
+            log.error("Duplicate login error", e);
+            return new ResponseEntity("Username already exists", HttpStatus.CONFLICT);
         } catch (Exception e) {
+            // Handle other exceptions
             log.error("Error registering user", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("Registration failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
