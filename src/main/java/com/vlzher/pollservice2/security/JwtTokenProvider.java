@@ -1,4 +1,4 @@
-package com.vlzher.pollservice2;
+package com.vlzher.pollservice2.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

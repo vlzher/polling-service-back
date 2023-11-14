@@ -9,5 +9,5 @@ public class PollDetailsDTO {
     private Long pollID;
     private String pollName;
     private List<QuestionDetailsDTO> questions;
-
+    private boolean isMyPoll;
 }

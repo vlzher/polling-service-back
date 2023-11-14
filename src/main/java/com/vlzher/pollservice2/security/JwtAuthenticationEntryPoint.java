@@ -1,4 +1,4 @@
-package com.vlzher.pollservice2;
+package com.vlzher.pollservice2.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

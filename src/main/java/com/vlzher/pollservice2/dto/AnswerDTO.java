@@ -4,11 +4,10 @@ import lombok.Data;
 
 @Data
 public class AnswerDTO {
-    private Long answerID;
-    private Long questionOptionID;
-
+    private String questionName;
+    private String optionName;
     public AnswerDTO(Answer answer) {
-        this.answerID= answer.getAnswerID();
-        this.questionOptionID = answer.getQuestionOption().getQuestionOptionID();
+        this.questionName = answer.getQuestionOption().getQuestion().getQuestionName();
+        this.optionName = answer.getQuestionOption().getQuestionOptionName();
     }
 }

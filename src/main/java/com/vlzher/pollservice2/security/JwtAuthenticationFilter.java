@@ -1,4 +1,4 @@
-package com.vlzher.pollservice2;
+package com.vlzher.pollservice2.security;
 
 import com.vlzher.pollservice2.service.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,7 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         try {
             String jwt = getJwtFromRequest(request);
 
