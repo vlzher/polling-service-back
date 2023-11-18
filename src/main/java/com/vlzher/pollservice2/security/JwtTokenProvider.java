@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
-    private String secret;  // Add this line to retrieve the secret from configuration properties
+    private String secret;
 
     @Value("${jwt.expiration}")
     private Long expiration;

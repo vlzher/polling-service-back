@@ -1,7 +1,5 @@
 package com.vlzher.pollservice2.security;
 
-import com.vlzher.pollservice2.security.JwtAuthenticationEntryPoint;
-import com.vlzher.pollservice2.security.JwtAuthenticationFilter;
 import com.vlzher.pollservice2.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -33,12 +33,10 @@ public class AuthService {
     }
 
     public void registerUser(User newUser) {
-        // Check if the user already exists
         if (userRepository.existsByLogin(newUser.getLogin())) {
             throw new DuplicateKeyException("Username already exists");
         }
 
-        // Save the user to the database
         userRepository.save(newUser);
     }
 
@@ -53,7 +51,6 @@ public class AuthService {
                 .compact();
     }
 
-    // You may need to implement loadUserByUsername from UserDetailsService
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByLogin(username);
         if (user == null) {
@@ -61,7 +58,6 @@ public class AuthService {
         }
 
 
-        // Convert User to UserDetails
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getPassword(),
@@ -70,14 +66,11 @@ public class AuthService {
     }
 
     public String authenticateUser(String login, String password) {
-        // Authenticate the user based on login and password
         User user = userRepository.findByLogin(login);
 
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            // User authenticated successfully, generate and return the token
             return generateToken(login);
         } else {
-            // Authentication failed
             throw new BadCredentialsException("Invalid username or password");
         }
     }

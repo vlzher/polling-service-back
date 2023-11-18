@@ -33,24 +33,18 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> registerUser(@RequestBody RegistrationRequest registrationRequest) {
         try {
-            // Create a new user
             User newUser = new User();
             newUser.setLogin(registrationRequest.getLogin());
             newUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
-            // Save the user to the database
             authService.registerUser(newUser);
 
-            // Generate JWT token
             String token = authService.generateToken(newUser.getLogin());
 
-            // Return the token in the response header
             return ResponseEntity.ok().header("Authorization", "Bearer " + token).build();
         } catch (DuplicateKeyException e) {
-            // Handle duplicate login (username) error
             return new ResponseEntity("Username already exists", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            // Handle other exceptions
             log.info(e.toString());
             return new ResponseEntity("Registration failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -58,14 +52,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody LoginRequest loginRequest) {
         try {
-            // Authenticate the user
             String token = authService.authenticateUser(loginRequest.getLogin(), loginRequest.getPassword());
             return new ResponseEntity("Bearer " + token, HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            // Handle invalid credentials error
             return new ResponseEntity("Invalid username or password", HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            // Handle other exceptions
             return new ResponseEntity("Login failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
